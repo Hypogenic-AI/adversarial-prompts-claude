@@ -1,0 +1,59 @@
+This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:
+Error: EACCES: permission denied, mkdir '/tmp/claude/-data-hypogenicai-workspaces-adversarial-prompts-claude/tasks'
+    at mkdirSync (node:fs:1363:26)
+    at ZdB (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:1018:8797)
+    at bu (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:1018:9430)
+    at Object.spawn (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:1627:706)
+    at L (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:3478:20291)
+    at N (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:3478:20491)
+    at file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:3478:20635
+    at Timeout._onTimeout (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:244:467)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+This error originated either by throwing inside of an async function without a catch block, or by rejecting a promise which was not handled with .catch(). The promise rejected with the reason:
+Error: EACCES: permission denied, mkdir '/tmp/claude/-data-hypogenicai-workspaces-adversarial-prompts-claude/tasks'
+    at mkdirSync (node:fs:1363:26)
+    at ZdB (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:1018:8797)
+    at bu (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:1018:9430)
+    at Object.spawn (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:1627:706)
+    at L (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:3478:20291)
+    at N (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:3478:20491)
+    at file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:3478:20635
+    at Timeout._onTimeout (file:///home/haokunliu/.nvm/versions/node/v22.21.1/lib/node_modules/@anthropic-ai/claude-code/cli.js:244:467)
+    at listOnTimeout (node:internal/timers:588:17)
+    at process.processTimers (node:internal/timers:523:7)
+## Research Session Complete
+
+I have completed all phases of the research project investigating whether it's easier or harder to hide adversarial prompts in longer documents. Here's a summary:
+
+### Key Results
+
+**Main Finding**: Document length has **no significant effect** on prompt injection attack success rate. The hypothesis that longer documents would dilute the adversarial signal was refuted.
+
+| Metric | Result |
+|--------|--------|
+| Overall Attack Success Rate | 9.3% (28/300 experiments) |
+| GPT-4.1 ASR | 18.7% |
+| Claude Sonnet 4 ASR | 0.0% |
+| Length effect | Not significant (p=0.76) |
+| Position effect | Not significant (p=0.63) |
+
+**The critical finding**: Attack type matters far more than document length or position. The "context confusion" attack (pretending the document has ended) achieved 76.7% success on GPT-4.1, while other attacks mostly failed.
+
+### Deliverables Created
+
+1. **REPORT.md** - Comprehensive research report with methodology, results, and analysis
+2. **README.md** - Project overview and reproduction instructions
+3. **planning.md** - Research plan
+4. **src/** - Complete experiment codebase:
+   - `config.py` - Configuration
+   - `document_generator.py` - Document construction utilities
+   - `llm_client.py` - API client for GPT-4.1 and Claude
+   - `experiment.py` - Main experiment runner
+   - `analysis.py` - Statistical analysis and visualization
+5. **results/** - Raw experiment data (300 experiments)
+6. **figures/** - 7 visualization plots
+
+### Scientific Contribution
+
+This research fills a gap in the prompt injection literature by systematically studying document length effects. The finding that length doesn't matter has practical implications: organizations cannot rely on using longer documents as a natural defense against indirect prompt injection attacks.

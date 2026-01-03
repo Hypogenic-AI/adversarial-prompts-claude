@@ -1,0 +1,9 @@
+Metric,Value,Notes
+Overall ASR,9.3%,n=300
+ASR (gpt-4.1),18.7%,n=150
+ASR (claude-sonnet),0.0%,n=150
+ASR @ 500 tokens,8.0%,Shortest documents
+ASR @ 8000 tokens,11.0%,Longest documents
+ASR @ Start,5.0%,0% depth
+ASR @ Middle,10.0%,50% depth
+ASR @ End,8.3%,100% depth

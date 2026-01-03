@@ -1,0 +1,23 @@
+Resource finding phase completed successfully.
+Timestamp: 2026-01-03T15:15:00+00:00
+Papers downloaded: 11
+Datasets downloaded: 3
+Repositories cloned: 5
+
+Summary:
+- Literature review complete with 10 key papers analyzed
+- Datasets ready: prompt-injections (662), ctf-satml24 (137K), mrcr (2,400)
+- Code repositories cloned: BIPIA, CTF platform, Needle-Haystack, Open-PI, Universal-PI
+
+Research Question: Is it easier or harder to hide adversarial prompts in longer documents?
+
+Key Finding from Literature:
+The "Lost in the Middle" phenomenon suggests adversarial prompts placed in middle
+positions of long documents may be LESS effective due to attention dilution.
+However, no prior work has systematically tested document LENGTH variation.
+
+Recommended Next Steps:
+1. Generate synthetic long documents at varying lengths
+2. Embed attack payloads at different positions
+3. Measure attack success rate across length × position matrix
+4. Compare results to baseline (no document padding)

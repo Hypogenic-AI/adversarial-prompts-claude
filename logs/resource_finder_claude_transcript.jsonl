@@ -1,0 +1,54 @@
+All resources have been gathered successfully. Let me provide a summary:
+
+---
+
+## Resource Gathering Complete
+
+I have completed the research resource gathering phase for the project: **"Is it easier or harder to hide adversarial prompts in longer documents?"**
+
+### Summary of Deliverables
+
+| Resource Type | Count | Location |
+|---------------|-------|----------|
+| **Papers** | 11 PDFs | `papers/` |
+| **Datasets** | 3 (140K+ samples total) | `datasets/` |
+| **Code Repositories** | 5 | `code/` |
+
+### Key Papers Downloaded
+
+1. **Indirect Prompt Injection** (Greshake et al.) - Foundational IPI paper
+2. **BIPIA Benchmark** (Yi et al.) - First benchmark testing position effects
+3. **Lost in the Middle** (Liu et al.) - Critical insight on attention patterns
+4. **TensorTrust** - 126K human-generated attacks
+5. **SaTML CTF Dataset** - 137K attack chats
+6. + 6 more supporting papers
+
+### Datasets Ready
+
+- **prompt-injections** (deepset): 662 labeled injection examples
+- **ctf-satml24** (ETH Zurich): 137K attack chats + 44 defenses
+- **mrcr** (OpenAI): 2,400 long-context coreference samples
+
+### Code Repositories Cloned
+
+- **BIPIA** - Position-based testing framework
+- **Needle-in-Haystack** - Long-context testing harness
+- **Open-Prompt-Injection** - Attack/defense toolkit
+- **Universal-Prompt-Injection** - Automated attack generation
+- **CTF Platform** - Competition infrastructure
+
+### Key Insight from Literature
+
+The **"Lost in the Middle"** phenomenon suggests that LLMs attend less to content in the middle of long documents. This could mean:
+- Adversarial prompts in the **middle** may be less effective (attention dilution)
+- Adversarial prompts at the **start/end** may be more effective (primacy/recency bias)
+- **No prior work has systematically varied document LENGTH** - this is the research gap
+
+### Files Created
+
+- `literature_review.md` - Comprehensive synthesis of 10 key papers
+- `resources.md` - Complete catalog of all resources
+- `papers/README.md` - Paper descriptions
+- `datasets/README.md` - Dataset documentation with download instructions
+- `code/README.md` - Repository descriptions
+- `.resource_finder_complete` - Completion marker
