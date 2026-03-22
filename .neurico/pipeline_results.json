@@ -1,0 +1,27 @@
+{
+  "success": true,
+  "stages": {
+    "resource_finder": {
+      "success": true,
+      "completion_marker": "/workspaces/adversarial-prompts-claude/.resource_finder_complete",
+      "outputs": {
+        "literature_review": "/workspaces/adversarial-prompts-claude/literature_review.md",
+        "resources_catalog": "/workspaces/adversarial-prompts-claude/resources.md",
+        "papers_dir": "/workspaces/adversarial-prompts-claude/papers",
+        "datasets_dir": "/workspaces/adversarial-prompts-claude/datasets",
+        "code_dir": "/workspaces/adversarial-prompts-claude/code"
+      },
+      "log_file": "/workspaces/adversarial-prompts-claude/logs/resource_finder_claude.log",
+      "transcript_file": "/workspaces/adversarial-prompts-claude/logs/resource_finder_claude_transcript.jsonl",
+      "elapsed_time": 2890.186891078949
+    },
+    "experiment_runner": {
+      "success": true,
+      "return_code": 0,
+      "elapsed_time": 5303.370881319046,
+      "log_file": "/workspaces/adversarial-prompts-claude/logs/execution_claude.log",
+      "transcript_file": "/workspaces/adversarial-prompts-claude/logs/execution_claude_transcript.jsonl"
+    }
+  },
+  "work_dir": "/workspaces/adversarial-prompts-claude"
+}

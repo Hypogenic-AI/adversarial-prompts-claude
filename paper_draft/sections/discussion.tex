@@ -1,0 +1,55 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Why Do Metadata-Mimicking Attacks Always Succeed?}
+
+The most striking finding is that three subtle attacks maintain $\sim$100\% \asr across all experimental conditions.
+These attacks share a common strategy: they frame adversarial instructions as editorial notes, formatting guidelines, or author preferences---document metadata that the model treats as legitimate processing instructions rather than content to summarize.
+
+We hypothesize that this vulnerability arises from a fundamental ambiguity in the model's task: when asked to ``summarize a document,'' the model must distinguish between \emph{content} (to be summarized) and \emph{meta-instructions} (to be followed).
+Attacks that exploit this ambiguity by disguising instructions as meta-instructions bypass the model's safety training, which focuses on detecting overt override attempts.
+
+This interpretation is consistent with the finding that \gptfull resists direct overrides (0\% \asr) but remains fully vulnerable to metadata-mimicking attacks (100\% \asr): safety training addresses the \emph{form} of the attack (explicit instruction override) rather than the \emph{mechanism} (instruction-data confusion).
+
+\subsection{The 2{,}000-Token Plateau}
+
+For length-sensitive attacks, \asr drops sharply between 500 and 2{,}000 tokens but then plateaus through 32{,}000 tokens.
+This plateau suggests that the model's effective attention window for deciding whether to follow an embedded instruction is limited to roughly 2{,}000 tokens of surrounding context.
+Beyond this window, additional filler text provides no further dilution benefit.
+
+This finding has practical implications: if length-based defenses are employed (\eg padding documents with benign text), they saturate quickly and provide diminishing returns beyond a modest threshold.
+
+\subsection{Recency Bias and the End Position}
+
+Direct attacks placed at the end of the document achieve 61.4\% \asr versus 21.7\% at all other positions.
+This asymmetric position effect---concentrated at the end rather than following the symmetric U-shape predicted by ``Lost in the Middle''~\citep{liu2023lost}---suggests that for instruction-following (as opposed to factual retrieval), the model exhibits a strong recency bias: the last content it processes exerts disproportionate influence on its behavior.
+
+This has important implications for document processing pipelines: content at the end of a document is the most dangerous position for adversarial injection, and defenses should prioritize sanitizing document tails.
+
+\subsection{Limitations}
+\label{sec:limitations}
+
+\para{Evaluation method.}
+Our pattern-matching evaluation is conservative and may miss cases of partial compliance where the model follows the spirit but not the exact letter of the injection.
+An LLM-as-judge evaluation~\citep{yi2024llmjudge} would capture a richer spectrum of compliance behaviors.
+
+\para{Attack diversity.}
+Our 10 attacks, while covering direct and subtle categories, do not exhaust the space of possible injection techniques.
+Notably, we do not test encoded attacks (base64, Unicode), multi-turn attacks, or gradient-optimized adversarial suffixes~\citep{pasquini2024neural}.
+
+\para{Task scope.}
+We test only document summarization.
+Other tasks (\eg question answering, code generation, data extraction) may show different vulnerability patterns, particularly tasks where the model must extract and follow specific instructions from the document.
+
+\para{Model coverage.}
+We test two models from a single provider (OpenAI).
+While preliminary testing showed that Claude models resist all 5 direct attacks (0\% \asr), we did not conduct a full evaluation with subtle attacks.
+The three vulnerability classes we identify may not generalize across all model families.
+
+\para{Token counting.}
+Our document generator uses a character-based approximation (4 characters per token) rather than exact tokenizer-based counting.
+While this introduces noise in the precise length of each document, it does not affect the relative ordering of length conditions.
+
+\para{Deterministic setting.}
+All experiments use temperature 0.0.
+Real deployments often use $\text{temperature} > 0$, which introduces stochastic variation that could affect both attack success and defense reliability.

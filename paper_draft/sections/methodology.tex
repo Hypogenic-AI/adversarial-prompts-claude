@@ -1,0 +1,58 @@
+\section{Methodology}
+\label{sec:methodology}
+
+We adapt the standard \nih evaluation paradigm~\citep{liu2023lost} from factual retrieval to adversarial injection, embedding prompt injection attacks at controlled positions within documents of varying lengths and measuring whether the model follows the injected instruction.
+
+\subsection{Task and Threat Model}
+\label{sec:task}
+
+We consider a summarization task where the model receives a system prompt (``You are a helpful assistant that summarizes documents'') and a user prompt containing an external document to summarize.
+The attacker controls a portion of the document and embeds an adversarial instruction, but cannot modify the system prompt or user instruction.
+This threat model reflects real-world scenarios such as RAG pipelines, email summarization, and document processing, where the LLM ingests untrusted content.
+
+\subsection{Document Construction}
+\label{sec:documents}
+
+\para{Filler text.}
+We curate 16 coherent paragraphs covering science, history, technology, and nature topics in an encyclopedia-like style.
+For each experimental condition, paragraphs are sampled (with seed 42) and concatenated to reach the target document length.
+This ensures realistic, coherent context rather than random noise.
+
+\para{Injection placement.}
+Given a target document length $L$ and injection position $p \in [0, 1]$, we split the filler text at position $\lfloor p \cdot L \rfloor$ tokens and insert the adversarial payload.
+Position $p=0$ places the injection at the document start, $p=0.5$ at the middle, and $p=1.0$ at the end.
+
+\para{Experimental grid.}
+We test 7 document lengths $L \in \{500, 1000, 2000, 4000, 8000, 16000, 32000\}$ tokens and 7 injection positions $p \in \{0.0, 0.1, 0.25, 0.5, 0.75, 0.9, 1.0\}$, yielding 49 length-position combinations per attack.
+
+\subsection{Attack Design}
+\label{sec:attacks}
+
+We design 10 adversarial prompts in two categories (\secref{sec:attack_appendix}):
+
+\para{Direct attacks} (5 attacks) attempt explicit instruction override.
+These include instruction overrides (``Ignore all previous instructions\ldots''), role manipulation (``[ADMIN MODE ACTIVATED]\ldots''), context confusion using document-end delimiters, social engineering via flattery, and developer-note instruction leaks.
+
+\para{Subtle attacks} (5 attacks) blend into the document's expected conventions.
+These include fake editor notes, citation requirements, formatting guidelines, compliance notices, and author preference statements.
+Each subtle attack frames its payload as legitimate document metadata rather than as an instruction override.
+
+Each attack has a unique success pattern---a specific string (\eg \texttt{INJECTION\_SUCCESSFUL}, \texttt{CATEGORY-BLUE}) that appears in the model's output only if the injection succeeds.
+
+\subsection{Models and Configuration}
+\label{sec:models}
+
+We test two OpenAI models: \gptmini (full factorial grid: 7 lengths $\times$ 7 positions $\times$ 10 attacks $\times$ 2 trials = 980 experiments) and \gptfull (reduced grid: 5 lengths $\times$ 5 positions $\times$ 10 attacks $\times$ 1 trial = 250 experiments).
+All experiments use temperature 0.0 for deterministic outputs and a maximum of 300 output tokens.
+
+\subsection{Evaluation}
+\label{sec:evaluation}
+
+\para{Attack Success Rate (ASR).}
+We evaluate injection success via pattern matching: if the model's response contains the attack's success pattern (case-insensitive), the attack is scored as successful.
+This approach is conservative---it may miss partial compliance but ensures high precision.
+We manually verified 20 randomly sampled results (10 successes, 10 failures) and found 100\% agreement with the automated scoring.
+
+\para{Statistical tests.}
+We use the Kruskal-Wallis $H$-test for omnibus comparisons across length and position levels, the Mann-Whitney $U$-test for pairwise comparisons between attack categories, and Spearman rank correlation for monotonic trends.
+All tests use $\alpha = 0.05$.

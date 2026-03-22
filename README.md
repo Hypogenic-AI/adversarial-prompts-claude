@@ -4,102 +4,66 @@
 
 ## Key Findings
 
-- **Document length has no significant effect on attack success rate** (p=0.76)
-- **Position within the document doesn't matter** either (p=0.63)
-- **Attack type is the critical factor**: "context confusion" attacks achieved 76.7% ASR vs 0% for most other types
-- **Model architecture matters**: Claude Sonnet 4 resisted all attacks (0% ASR) while GPT-4.1 was vulnerable (18.7% ASR)
+1. **Longer documents reduce ASR for moderate attacks**: Subtle prompt injections drop from 97% success at 500 tokens to 60% at 2,000+ tokens (p<0.0001), then plateau.
+2. **The strongest attacks are immune to document length**: Three "metadata-mimicking" attacks achieve 100% ASR regardless of document length (500–32,000 tokens).
+3. **End-of-document position is critical for direct attacks**: Direct injection ASR jumps from 22% to 61% when placed at the end of the document (p<0.0001).
+4. **Attack sophistication matters more than length**: Subtle attacks (68% ASR) are 2.6× more effective than direct attacks (26% ASR).
+5. **GPT-4.1 resists direct attacks better but remains vulnerable to subtle ones**: 0% ASR on most direct attacks, but 92-100% on context confusion and metadata-mimicking injections.
 
-## Results Summary
+## Methodology
 
-| Condition | Attack Success Rate |
-|-----------|---------------------|
-| Overall | 9.3% |
-| GPT-4.1 | 18.7% |
-| Claude Sonnet 4 | 0.0% |
-| Short docs (500 tokens) | 8.0% |
-| Long docs (8000 tokens) | 11.0% |
-| Context Confusion attack | 76.7% (GPT-4.1) |
+An **adversarial needle-in-haystack** experiment: embed prompt injections at controlled positions within documents of varying lengths, then measure whether the target LLM follows the injected instruction.
 
-## Practical Implications
+- **1,230 experiments** across GPT-4.1 and GPT-4.1-mini
+- **7 document lengths**: 500 to 32,000 tokens
+- **7 injection positions**: 0% to 100% depth
+- **10 attack types**: 5 direct + 5 subtle
+- **Evaluation**: Pattern matching for attack success
 
-1. Don't rely on document length as a defense against prompt injection
-2. Focus defenses on specific attack patterns (e.g., detecting fake document boundaries)
-3. Model choice matters - Claude appears more resistant to these attacks
-
-## Repository Structure
-
-```
-adversarial-prompts-claude/
-├── REPORT.md           # Full research report with methodology and findings
-├── README.md           # This file
-├── planning.md         # Research plan
-├── src/                # Experiment code
-│   ├── config.py       # Configuration and parameters
-│   ├── document_generator.py  # Document construction
-│   ├── llm_client.py   # API client for GPT/Claude
-│   ├── experiment.py   # Main experiment runner
-│   └── analysis.py     # Statistical analysis and visualization
-├── results/            # Experiment results
-│   ├── full_results.csv
-│   └── full_results.json
-├── figures/            # Generated visualizations
-│   ├── asr_by_length.png
-│   ├── asr_by_position.png
-│   ├── asr_heatmap.png
-│   └── ...
-├── datasets/           # Pre-gathered datasets
-├── papers/             # Reference papers
-└── code/               # Baseline implementations
-```
-
-## Reproducing Results
-
-### Setup
+## How to Reproduce
 
 ```bash
-# Create virtual environment
-uv venv
-source .venv/bin/activate
+# Set up environment
+uv venv && source .venv/bin/activate
+uv add openai tiktoken numpy pandas matplotlib seaborn scipy tqdm
 
-# Install dependencies
-uv pip install openai anthropic datasets pandas numpy matplotlib seaborn scipy tqdm
+# Set API key
+export OPENAI_API_KEY=your_key
+
+# Run GPT-4.1-mini full grid (980 API calls, ~45 min)
+python src/run_experiment.py --phase 1
+
+# Run GPT-4.1 reduced grid (250 API calls, ~15 min)
+python src/run_experiment.py --phase 2
+
+# Analyze results and generate figures
+python src/full_analysis.py
 ```
 
-### Run Experiments
-
-```bash
-# Quick test (2 lengths, 3 positions, 2 attacks)
-python src/experiment.py --quick
-
-# Full experiment
-python src/experiment.py
-```
-
-### Analyze Results
-
-```bash
-python src/analysis.py
-```
-
-## Key Files
-
-- **REPORT.md**: Comprehensive 15-page research report with all findings
-- **src/experiment.py**: Main experiment runner (300 API calls)
-- **src/analysis.py**: Statistical analysis and figure generation
-- **results/full_results.json**: Raw experiment data
-
-## Citation
-
-If you use this research, please cite:
+## File Structure
 
 ```
-@misc{adversarial-prompts-2026,
-  title={Is it Easier or Harder to Hide Adversarial Prompts in Longer Documents?},
-  year={2026},
-  note={Experimental study on indirect prompt injection vs document length}
-}
+.
+├── REPORT.md              # Full research report with results
+├── README.md              # This file
+├── planning.md            # Experimental design and hypotheses
+├── literature_review.md   # Literature review and synthesis
+├── resources.md           # Catalog of available resources
+├── src/
+│   ├── config.py          # Experiment configuration
+│   ├── experiment.py      # Main experiment runner
+│   ├── run_experiment.py  # Convenience runner script
+│   ├── llm_client.py      # LLM API client
+│   ├── document_generator.py  # Filler text + injection insertion
+│   ├── analysis.py        # Analysis utilities
+│   └── full_analysis.py   # Comprehensive analysis script
+├── results/               # Raw results (CSV, JSON)
+├── figures/               # Generated visualizations
+├── papers/                # Downloaded research papers
+├── datasets/              # Downloaded datasets
+└── code/                  # Cloned baseline repositories
 ```
 
-## License
+## Full Report
 
-This research was conducted for academic purposes. See individual dataset licenses in `datasets/README.md`.
+See [REPORT.md](REPORT.md) for comprehensive results, statistical analysis, and discussion.

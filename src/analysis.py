@@ -241,6 +241,60 @@ def plot_asr_by_attack(df: pd.DataFrame, save_path: Optional[str] = None):
     return fig, ax
 
 
+def plot_asr_by_attack_category(df: pd.DataFrame, save_path: Optional[str] = None):
+    """Plot ASR by attack category (direct vs subtle) across lengths.
+
+    Args:
+        df: DataFrame with experiment results
+        save_path: Path to save figure
+    """
+    if 'attack_type' not in df.columns:
+        logger.warning("No attack_type column found")
+        return None, None
+
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+    # Left: ASR by length for direct vs subtle
+    ax = axes[0]
+    for atype in ['direct', 'subtle']:
+        type_df = df[df['attack_type'] == atype]
+        if len(type_df) == 0:
+            continue
+        asr = type_df.groupby('document_length')['attack_success'].agg(['mean', 'std']).reset_index()
+        ax.errorbar(asr['document_length'], asr['mean'], yerr=asr['std'],
+                    marker='o', capsize=5, label=atype, linewidth=2, markersize=8)
+    ax.set_xlabel('Document Length (tokens)', fontsize=12)
+    ax.set_ylabel('Attack Success Rate', fontsize=12)
+    ax.set_title('Direct vs Subtle Attacks: Length Effect', fontsize=14)
+    ax.legend(title='Attack Type')
+    ax.set_xscale('log')
+    ax.set_ylim(-0.05, 1.05)
+
+    # Right: ASR by position for direct vs subtle
+    ax = axes[1]
+    for atype in ['direct', 'subtle']:
+        type_df = df[df['attack_type'] == atype]
+        if len(type_df) == 0:
+            continue
+        asr = type_df.groupby('injection_position')['attack_success'].agg(['mean', 'std']).reset_index()
+        ax.errorbar(asr['injection_position'] * 100, asr['mean'], yerr=asr['std'],
+                    marker='o', capsize=5, label=atype, linewidth=2, markersize=8)
+    ax.set_xlabel('Injection Position (%)', fontsize=12)
+    ax.set_ylabel('Attack Success Rate', fontsize=12)
+    ax.set_title('Direct vs Subtle Attacks: Position Effect', fontsize=14)
+    ax.legend(title='Attack Type')
+    ax.set_xticks([0, 10, 25, 50, 75, 90, 100])
+    ax.set_ylim(-0.05, 1.05)
+
+    plt.tight_layout()
+
+    if save_path:
+        plt.savefig(save_path, dpi=150, bbox_inches='tight')
+        logger.info(f"Saved figure to {save_path}")
+
+    return fig, axes
+
+
 def plot_length_position_interaction(df: pd.DataFrame, save_path: Optional[str] = None):
     """Plot interaction between length and position effects.
 
@@ -399,6 +453,10 @@ def generate_all_figures(df: pd.DataFrame):
 
     # Figure 5: Interaction plot
     plot_length_position_interaction(df, save_path=os.path.join(FIGURES_DIR, 'interaction_plot.png'))
+
+    # Figure 6: Direct vs subtle attack categories
+    if 'attack_type' in df.columns:
+        plot_asr_by_attack_category(df, save_path=os.path.join(FIGURES_DIR, 'asr_direct_vs_subtle.png'))
 
     # Per-model heatmaps
     for model in df['model_name'].unique():

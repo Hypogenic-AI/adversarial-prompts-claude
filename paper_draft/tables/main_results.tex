@@ -1,0 +1,19 @@
+\begin{table}[t]
+\caption{\asr (\%) by document length and attack category on \gptmini. Best (lowest) \asr per category is shown in \textbf{bold}. Subtle attacks decline sharply from 500 to 2{,}000 tokens then plateau; direct attacks show no clear trend.}
+\label{tab:main_results}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lccccccc@{}}
+\toprule
+& \multicolumn{7}{c}{\textsc{Document Length (tokens)}} \\
+\cmidrule(lr){2-8}
+\textsc{Category} & 500 & 1{,}000 & 2{,}000 & 4{,}000 & 8{,}000 & 16{,}000 & 32{,}000 \\
+\midrule
+\directattack & 31.4 & 28.6 & 27.1 & \textbf{20.0} & 24.3 & 28.6 & 31.4 \\
+\subtleattack & 97.1 & 71.4 & 62.9 & \textbf{60.0} & \textbf{60.0} & \textbf{60.0} & \textbf{60.0} \\
+\midrule
+Overall & 64.3 & 50.0 & 45.0 & \textbf{40.0} & 42.1 & 44.3 & 45.7 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table}

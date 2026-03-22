@@ -1,0 +1,29 @@
+\section{Related Work}
+\label{sec:related_work}
+
+\para{Prompt injection attacks.}
+\citet{perez2022ignore_original} introduced the first systematic study of prompt injection, demonstrating that simple instruction overrides (\eg ``ignore previous instructions'') can redirect LLM behavior.
+\citet{greshake2023indirect} formalized \ipi, where adversarial content is embedded in external data that an LLM processes rather than in the user's direct input.
+Subsequent work has expanded the attack surface: \citet{liu2023prompt} demonstrated injection against LLM-integrated applications, \citet{zhan2024injecagent} benchmarked injection in tool-using agents, and \citet{pasquini2024neural} used learned execution triggers to improve injection reliability.
+Our work complements these studies by systematically varying the \emph{context} in which injections appear---specifically, document length and injection position---rather than developing new attack techniques.
+
+\para{Benchmarks for prompt injection.}
+\citet{zhu2023benchmarking} provided the first formal framework and comprehensive benchmark, testing 9 models across 49 task combinations and finding that injection effectiveness plateaus at $\sim$30 injected tokens.
+\citet{yi2023bipia} introduced the BIPIA benchmark for \ipi with position testing (beginning, middle, end) at fixed document length, finding all tested models vulnerable.
+\citet{yi2024llmjudge} evaluated LLM-as-judge approaches for scoring injection success.
+We build on these benchmarks by extending the position axis to 7 levels and crossing it with 7 document lengths, producing a two-dimensional evaluation that prior benchmarks do not cover.
+
+\para{Long-context LLM behavior.}
+\citet{liu2023lost} demonstrated the ``Lost in the Middle'' effect: LLMs show a U-shaped attention pattern in long contexts, retrieving information best from the beginning and end of the input.
+\citet{anil2024many} showed that many-shot jailbreaking exploits long contexts via power-law scaling, with attack success increasing monotonically with the number of in-context demonstrations.
+\citet{wang2025manyshot} replicated this finding across 7 models, disentangling content quality from length effects.
+\citet{chen2025reasoning} demonstrated compositional attacks in long contexts, where individually innocuous fragments combine to elicit harmful behavior, with safety dropping from 55\% at 0k context to 42\% at 64k.
+\citet{chen2025short} formalized the relationship between attack length and defense, showing that ASR scales with $\sqrt{M_{\text{test}} / M_{\text{train}}}$.
+Our work differs from these studies in that we embed a \emph{single} adversarial instruction (not many-shot demonstrations or distributed fragments) and vary the surrounding document length, isolating the dilution-vs-camouflage tradeoff.
+
+\para{Defenses against prompt injection.}
+\citet{hines2024spotlighting} proposed datamarking to distinguish system instructions from external data, reducing \asr from $\sim$60\% to 3.1\% regardless of position.
+\citet{geng2025pisanitizer} introduced an attention-based sanitization defense effective across document lengths, reducing \asr to $\sim$1\%.
+\citet{chen2024struq} used structured queries to separate instructions from data.
+\citet{wu2024secalign} applied preference optimization to improve injection resistance.
+These defenses are complementary to our findings: we characterize \emph{which} attacks and conditions are most dangerous, informing where defenses should focus.

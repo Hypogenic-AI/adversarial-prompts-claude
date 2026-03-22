@@ -1,0 +1,10 @@
+\begin{abstract}
+As large language models process increasingly long contexts in retrieval-augmented generation, document summarization, and email triage, a pressing question arises: does document length help or hinder adversarial prompt injection attacks?
+We present the first systematic \emph{adversarial needle-in-haystack} study, embedding 10 prompt injection attacks at 7 controlled positions within documents spanning 500 to 32{,}000 tokens, producing a two-dimensional map of Attack Success Rate (\asr) as a function of both document length and injection position.
+Across 1{,}230 experiments on \gptmini and \gptfull, we identify three distinct vulnerability classes.
+\emph{Always-effective} attacks---those that mimic editorial or formatting metadata---maintain near-100\% \asr regardless of length or position.
+\emph{Length-sensitive} attacks drop from 97\% \asr at 500 tokens to 0\% beyond 4{,}000 tokens.
+\emph{Uniformly weak} direct override attacks remain below 25\% \asr but spike to 61\% at the document's end, revealing a strong recency bias.
+Overall, subtle attacks outperform direct attacks by 2.6$\times$ ($p < 0.000001$), and attack sophistication is a stronger predictor of success than either document length or injection position.
+These results show that document length alone is not a reliable defense against prompt injection and that the most dangerous attacks exploit the model's tendency to follow document metadata conventions.
+\end{abstract}

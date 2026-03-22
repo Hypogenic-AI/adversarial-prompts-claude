@@ -1,5 +1,22 @@
 # Research Plan: Hiding Adversarial Prompts in Long Documents
 
+## Motivation & Novelty Assessment
+
+### Why This Research Matters
+As LLMs gain longer context windows (100k-1M+ tokens), they increasingly process large documents where adversarial instructions could be embedded. Understanding how document length and injection position interact to affect attack success is critical for building robust defenses for RAG systems, document summarization, and any LLM application processing untrusted content.
+
+### Gap in Existing Work
+The literature review reveals that while many-shot jailbreaking (Anil et al., 2024) shows ASR scales with context length, and "Lost in the Middle" (Liu et al., 2023) shows position effects, **no study systematically maps the 2D interaction of document length × injection position**. Most studies test up to 64k tokens and study one axis (length OR position), but not both simultaneously.
+
+### Our Novel Contribution
+We conduct the first systematic **adversarial needle-in-haystack** study: embedding adversarial instructions at controlled positions within documents of varying lengths, producing a 2D heatmap of ASR as a function of both position and length. We also test whether injection type (direct vs. subtle) interacts differently with document length.
+
+### Experiment Justification
+- **Length sweep**: Tests whether longer documents help or hurt concealment (core hypothesis)
+- **Position sweep**: Tests whether "lost in the middle" applies to adversarial prompts
+- **2D heatmap**: Reveals the interaction surface — the key novel contribution
+- **Multiple injection types**: Tests whether sophistication of attack modulates the length effect
+
 ## Research Question
 
 **Is it easier or harder to hide adversarial prompts (prompt injections) in longer documents?**

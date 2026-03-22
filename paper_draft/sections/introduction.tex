@@ -1,0 +1,36 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Modern LLM applications routinely process long, untrusted documents---retrieval-augmented generation pipelines ingest web pages, email assistants summarize threads, and coding agents consume entire repositories.
+Each of these settings invites \ipi attacks, where an adversary embeds malicious instructions inside the content that an LLM is asked to process~\citep{greshake2023indirect}.
+As context windows grow from 4k to over 1M tokens, a natural question emerges: {\bf does a longer document make it easier or harder to hide an adversarial prompt?}
+
+Two competing intuitions frame the debate.
+On one hand, longer documents introduce more benign context that could dilute an adversarial signal, reducing the model's attention to the injected instruction.
+On the other hand, longer documents provide more space to camouflage an attack, and prior work on many-shot jailbreaking shows that attack success scales as a power law with context length~\citep{anil2024many}.
+Position effects add a further dimension: the ``Lost in the Middle'' phenomenon demonstrates that LLMs attend unevenly across long contexts, with edges receiving disproportionate attention~\citep{liu2023lost}.
+
+Despite extensive work on prompt injection~\citep{perez2022ignore_original, zhu2023benchmarking, yi2023bipia} and long-context behavior~\citep{liu2023lost, chen2025reasoning}, no prior study has systematically mapped the joint effect of document length and injection position on prompt injection success.
+Existing work either varies length at a fixed position~\citep{anil2024many, wang2025manyshot} or varies position at a fixed length~\citep{yi2023bipia}, leaving the two-dimensional interaction unexplored.
+
+We close this gap with the first \emph{adversarial needle-in-haystack} study (\figref{fig:heatmap}).
+Adapting the standard \nih evaluation---where a factual needle is hidden in a document haystack and retrieval accuracy is measured---we instead hide adversarial instructions and measure whether the model follows them.
+We embed 10 prompt injection attacks (5 direct, 5 subtle) at 7 positions within documents of 7 lengths (500--32{,}000 tokens), yielding a full factorial design tested on two models (\gptmini and \gptfull) across 1{,}230 experiments.
+
+Our results reveal that the answer depends critically on attack type:
+
+\begin{itemize}[leftmargin=*,itemsep=0pt,topsep=0pt]
+    \item \textbf{Always-effective attacks} that mimic editorial metadata maintain $\sim$100\% \asr at all lengths, rendering length irrelevant as a defense.
+    \item \textbf{Length-sensitive attacks} drop from 97\% to 60\% \asr between 500 and 2{,}000 tokens, then plateau---suggesting that attention dilution saturates quickly.
+    \item \textbf{Direct override attacks} are mostly ineffective ($<$25\% \asr) except at the document's end, where recency bias boosts success to 61\% ($p < 0.0001$).
+\end{itemize}
+
+These findings have immediate implications for defense design: document length alone is not a reliable mitigation, attention to document boundaries (especially the end) is critical, and the most dangerous attacks exploit the model's trust in formatting and editorial conventions rather than attempting explicit instruction override.
+
+We make the following contributions:
+\begin{itemize}[leftmargin=*,itemsep=0pt,topsep=0pt]
+    \item We propose the \emph{adversarial needle-in-haystack} framework, the first systematic methodology for mapping prompt injection success across the two-dimensional space of document length and injection position (\secref{sec:methodology}).
+    \item We conduct 1{,}230 controlled experiments identifying three distinct vulnerability classes that respond differently to document length (\secref{sec:results}).
+    \item We demonstrate that attack sophistication---specifically, mimicking document metadata---is a stronger predictor of injection success than either length or position, with subtle attacks outperforming direct attacks by 2.6$\times$ (\secref{sec:results}).
+    \item We provide actionable defense recommendations, including the finding that the end-of-document position is uniquely dangerous for direct attacks and that length-based defenses plateau at $\sim$2{,}000 tokens (\secref{sec:discussion}).
+\end{itemize}

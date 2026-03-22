@@ -1,0 +1,12 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We introduced the adversarial \nih framework and used it to map prompt injection success across the two-dimensional space of document length (500--32{,}000 tokens) and injection position (7 levels) for 10 attack types on two models.
+Our 1{,}230 experiments reveal that the effect of document length on injection success depends critically on attack type: metadata-mimicking attacks succeed regardless of length, moderately effective attacks are diluted by longer contexts (but only up to $\sim$2{,}000 tokens), and direct override attacks are mostly ineffective except at the document's end.
+
+These findings carry three practical takeaways.
+First, document length is not a reliable defense against prompt injection---the strongest attacks are length-invariant.
+Second, the end of the document is the most dangerous position for adversarial content, particularly for direct attacks.
+Third, the most effective attacks exploit the content-vs-metadata ambiguity inherent in document processing tasks, suggesting that defenses should focus on establishing clear boundaries between data and instructions~\citep{hines2024spotlighting, chen2024struq} rather than relying on context dilution.
+
+Future work should extend this framework to additional models and tasks, test at extreme context lengths (64k--1M tokens) to determine whether the 2{,}000-token plateau persists, and investigate why some metadata-mimicking attacks maintain perfect success rates while structurally similar attacks fail completely at longer lengths.

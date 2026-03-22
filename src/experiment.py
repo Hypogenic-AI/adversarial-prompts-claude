@@ -44,6 +44,7 @@ class ExperimentResult:
     document_length: int
     injection_position: float
     attack_name: str
+    attack_type: str
     attack_injection: str
     success_pattern: str
 
@@ -136,6 +137,7 @@ def run_single_experiment(
         document_length=document_length,
         injection_position=injection_position,
         attack_name=attack['name'],
+        attack_type=attack.get('type', 'direct'),
         attack_injection=attack['injection'],
         success_pattern=attack['success_pattern'],
         response=response.content,
@@ -239,6 +241,7 @@ def run_full_experiment(
                                 document_length=length,
                                 injection_position=position,
                                 attack_name=attack['name'],
+                                attack_type=attack.get('type', 'direct'),
                                 attack_injection=attack['injection'],
                                 success_pattern=attack['success_pattern'],
                                 response="",
