@@ -1,0 +1,26 @@
+idea:
+  title: Is it easier or harder to hide adversarial prompts in longer documents?
+  domain: nlp
+  hypothesis: 'The effectiveness of hiding adversarial prompts within long documents
+    depends on whether increased document length introduces enough noise to override
+    the adversarial effect, or if it provides more space to conceal such instructions,
+    potentially making them harder to detect.
+
+    '
+  background:
+    description: 'Adversarial prompts can manipulate large language models (LLMs)
+      to perform unintended actions, such as providing restricted information or executing
+      code. This idea explores whether embedding such adversarial instructions in
+      longer documents makes them easier or harder to hide, considering the potential
+      for increased noise versus increased opportunity for concealment.
+
+      '
+  metadata:
+    author: Ari Holtzman
+    source: IdeaHub
+    source_url: https://hypogenic.ai/ideahub/idea/RE4hPBZFPcPjlucQzkA8
+    idea_id: is_it_easier_or_harder_to_hide_20260322_030755_00cc0661
+    created_at: '2026-03-22T03:07:55.818284'
+    status: submitted
+    github_repo_name: adversarial-prompts-claude
+    github_repo_url: https://github.com/Hypogenic-AI/adversarial-prompts-claude
